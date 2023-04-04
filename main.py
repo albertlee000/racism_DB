@@ -15,8 +15,21 @@ business = db['yelp_academic_dataset_business']
 review = db['yelp_academic_dataset_review']
 
 # 建立用于搜索中餐馆信息的模糊查询正则表达式
-pattern = re.compile('.*Chinese.*Restaurants.*|.*Restaurants.*Chinese.*')
-regex = Regex.from_native(pattern)
+china_reg = re.compile('.*Chinese.*Restaurants.*|.*Restaurants.*Chinese.*'
+                       '|.*food.*Chinese.*|.*chinese.*food.*', re.I)
+# 日本餐馆
+japan_reg = re.compile('.*japan.*Restaurants.*|.*Restaurants.*japan.*'
+                       '|.*food.*japan.*|.*japan.*food.*', re.I)
+# 韩国餐馆
+korea_reg = re.compile('.*korea.*Restaurants.*|.*Restaurants.*korea.*'
+                       '|.*food.*korea.*|.*korea.*food.*', re.I)
+# 亚洲餐馆
+asia_reg = re.compile('.*asia.*Restaurants.*|.*Restaurants.*asia.*'
+                       '|.*food.*asia.*|.*asia.*food.*', re.I)
+# 泰国餐馆
+thai_reg = re.compile('.*thai.*Restaurants.*|.*Restaurants.*thai.*'
+                       '|.*food.*thai.*|.*thai.*food.*', re.I)
+regex = Regex.from_native(china_reg)
 regex.flags = re.UNICODE
 
 # 获取一家id为'64212ff0a59bcf01998d0140'的餐馆的信息
@@ -29,8 +42,9 @@ print(ChinaStore)
 chinese_example_id = ChinaStore['business_id']
 # 获取上文选中的中餐馆的评论信息
 chinese_example_review = review.find_one({"business_id": chinese_example_id})
-print("\nthe star level is ", str(chinese_example_review['stars']), '\n', "review text is:", chinese_example_review['text'], "\n ",
-    "review date is: ",  chinese_example_review['date'],'\n')
+print('\n' + "stars:", str(chinese_example_review['stars']), '\n' +
+      "review text is:", chinese_example_review['text'], '\n' +
+      "review date is:",  chinese_example_review['date'] + '\n')
 
 # 计数所有中餐馆的数量
 print(business.count_documents({"categories": regex}))
